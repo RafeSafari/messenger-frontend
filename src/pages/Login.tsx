@@ -1,25 +1,77 @@
-import { Button, TextField, Stack } from "@mui/material";
+import { Button, TextField, Stack, Alert } from "@mui/material";
 import AuthLayout from "../layouts/AuthLayout";
 import { useAuthStore } from "../store/authStore";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import axios from "axios";
+import { register, login as loginApi } from "../library/chatApi";
 
 export default function Login() {
   const login = useAuthStore((s) => s.login);
   const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  const handleLogin = async () => {
+    if (!email || !password) {
+      setError("Email and password are required.");
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      const loginRes = await loginApi({ email, password });
+      if (!loginRes.data?.email) {
+        setError("Unable to login.");
+        return;
+      }
+      // await axios.post<{ email?: string; message?: string }>(
+      //   "/api/login",
+      //   { email, password }
+      // );
+      login(loginRes.data?.email ?? email);
+      navigate("/chat");
+    } catch (err) {
+      let message = "Unable to login.";
+      if (axios.isAxiosError(err)) {
+        const data = err.response?.data as { message?: string } | undefined;
+        message = data?.message ?? err.message ?? message;
+      } else if (err instanceof Error) {
+        message = err.message;
+      }
+      setError(message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <AuthLayout title="Login">
       <Stack spacing={2}>
-        <TextField label="Email" />
-        <TextField label="Password" type="password" />
+        <TextField
+          label="Email"
+          value={email}
+          onChange={(event) => setEmail(event.target.value)}
+          autoComplete="email"
+        />
+        <TextField
+          label="Password"
+          type="password"
+          value={password}
+          onChange={(event) => setPassword(event.target.value)}
+          autoComplete="current-password"
+        />
+        {error && <Alert severity="error">{error}</Alert>}
         <Button
           variant="contained"
-          onClick={() => {
-            login("test@mail.com");
-            navigate("/chat");
-          }}
+          disabled={loading}
+          onClick={handleLogin}
         >
-          Login
+          {loading ? "Logging in..." : "Login"}
         </Button>
       </Stack>
     </AuthLayout>
