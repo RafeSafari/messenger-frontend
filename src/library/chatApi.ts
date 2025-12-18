@@ -10,13 +10,13 @@ const CHAT_BASE_URL: string = process.env.NODE_ENV === 'production' ? 'https://f
 //   return res.data;
 // }
 
-export const register = async (payload: { email: string; password: string }) => {
-  const res = await axios.post(CHAT_BASE_URL + '/register', payload);
+export const register = async (payload: { name: string; email: string; password: string }) => {
+  const res = await axios.post(CHAT_BASE_URL + '/auth/register', payload);
   return res;
 }
 
 export const login = async (payload: { email: string; password: string }) => {
-  const res = await axios.post(CHAT_BASE_URL + '/login', payload);
+  const res = await axios.post(CHAT_BASE_URL + '/auth/login', payload);
   return res;
 }
 

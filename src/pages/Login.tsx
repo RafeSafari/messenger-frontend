@@ -1,10 +1,10 @@
 import { Button, TextField, Stack, Alert } from "@mui/material";
 import AuthLayout from "../layouts/AuthLayout";
 import { useAuthStore } from "../store/authStore";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
-import { register, login as loginApi } from "../library/chatApi";
+import { login as loginApi } from "../library/chatApi";
 
 export default function Login() {
   const login = useAuthStore((s) => s.login);
@@ -25,15 +25,11 @@ export default function Login() {
 
     try {
       const loginRes = await loginApi({ email, password });
-      if (!loginRes.data?.email) {
+      if (!loginRes.data?.token) {
         setError("Unable to login.");
         return;
       }
-      // await axios.post<{ email?: string; message?: string }>(
-      //   "/api/login",
-      //   { email, password }
-      // );
-      login(loginRes.data?.email ?? email);
+      login(loginRes.data?.user?.email ?? email);
       navigate("/chat");
     } catch (err) {
       let message = "Unable to login.";
@@ -66,13 +62,13 @@ export default function Login() {
           autoComplete="current-password"
         />
         {error && <Alert severity="error">{error}</Alert>}
-        <Button
-          variant="contained"
-          disabled={loading}
-          onClick={handleLogin}
-        >
+        <Button variant="contained" disabled={loading} onClick={handleLogin}>
           {loading ? "Logging in..." : "Login"}
         </Button>
+        <Stack direction={"row"} justifyContent="center" alignItems="center" gap={1}>
+          Don't have an account?
+          <Link to="/register">Register here</Link>
+        </Stack>
       </Stack>
     </AuthLayout>
   );
