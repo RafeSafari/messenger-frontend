@@ -7,6 +7,8 @@ import Chat from "./pages/Messenger";
 import Logout from "./pages/Logout";
 import theme from './theme';
 import { CssBaseline, ThemeProvider } from "@mui/material";
+import { ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   return (
@@ -21,6 +23,7 @@ function App() {
           <Route path="/chat" element={<Chat />} />
         </Routes>
       </BrowserRouter>
+      <ToastContainer />
     </ThemeProvider>
   );
 }

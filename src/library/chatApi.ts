@@ -36,6 +36,11 @@ export const addContact = async (payload: { uids: string[] }) => {
   return res;
 }
 
+export const getUser = async (uid: string) => {
+  const res = await axios.get(CHAT_BASE_URL + '/contacts/' + encodeURIComponent(uid));
+  return res;
+}
+
 // // PUT /users/{uid}
 // async updateUser(
 //   uid: string,

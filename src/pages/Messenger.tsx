@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import Contacts from "../components/ContactsPane";
-import ChatBox from "../components/ChatBox";
+import ChatBox from "../components/chat/ChatBox";
 
 export default () => (
   <Box display="flex" height="100vh">

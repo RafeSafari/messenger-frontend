@@ -27,10 +27,7 @@ declare global {
     role?: string;
     status?: string;
     statusMessage?: string;
-    metadata?: {
-      email?: string;
-      [key: string]: unknown;
-    };
+    email?: string;
     tags?: string[];
     conversationId?: string;
     [key: string]: unknown;

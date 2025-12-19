@@ -1,5 +1,6 @@
 import { Avatar, Button, Skeleton, Stack, Typography } from "@mui/material";
 import { useChatStore } from "../store/chatStore";
+import stringToSoftColor from "../utils/stringToSoftColor";
 
 export default ({ contact }: { contact: Contact }) => {
   const chatStore = useChatStore();
@@ -21,10 +22,10 @@ export default ({ contact }: { contact: Contact }) => {
         textAlign: "start",
       }}
     >
-      <Avatar src={contact.avatar}>{contact.name?.[0]?.toUpperCase()}</Avatar>
-      <Stack direction="column" gap={0.25}>
-        <Typography variant="body2">{contact.name}</Typography>
-        <Typography variant="caption">{contact.metadata?.email}</Typography>
+      <Avatar src={contact.avatar} sx={{ bgcolor: stringToSoftColor(contact.uid) }}>{contact.name?.[0]?.toUpperCase()}</Avatar>
+      <Stack direction="column" gap={0}>
+        <Typography variant="body2" fontWeight={500}>{contact.name}</Typography>
+        <Typography variant="caption" color="text.secondary">{contact.email}</Typography>
       </Stack>
     </Stack>
   );
