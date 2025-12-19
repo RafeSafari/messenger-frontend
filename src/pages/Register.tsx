@@ -1,4 +1,4 @@
-import { Button, TextField, Stack, Alert } from "@mui/material";
+import { Button, TextField, Stack, Alert, Typography } from "@mui/material";
 import AuthLayout from "../layouts/AuthLayout";
 import { useAuthStore } from "../store/authStore";
 import { Link, useNavigate } from "react-router-dom";
@@ -26,7 +26,6 @@ export default function Register() {
 
     try {
       const registerRes = await register({ name, email, password });
-      console.log('registerRes', registerRes)
       if (!registerRes.data?.user?.uid) {
         setError("Unable to register.");
         return;
@@ -90,8 +89,8 @@ export default function Register() {
           {loading ? "Registering..." : "Register"}
         </Button>
         <Stack direction={"row"} justifyContent="center" alignItems="center" gap={1}>
-          Already registered?
-          <Link to="/login">Login here</Link>
+          <Typography variant="caption">Already registered?</Typography>
+          <Typography variant="caption" component={Link} to="/login">Login here</Typography>
         </Stack>
       </Stack>
     </AuthLayout>

@@ -1,4 +1,5 @@
 import axios from 'axios';
+axios.defaults.withCredentials = true;
 
 const CHAT_BASE_URL: string = process.env.NODE_ENV === 'production' ? 'https://fake-cometchat-domain.ir' : 'http://localhost:50005';
 
@@ -17,6 +18,21 @@ export const register = async (payload: { name: string; email: string; password:
 
 export const login = async (payload: { email: string; password: string }) => {
   const res = await axios.post(CHAT_BASE_URL + '/auth/login', payload);
+  return res;
+}
+
+export const getContacts = async () => {
+  const res = await axios.get(CHAT_BASE_URL + '/contacts');
+  return res;
+}
+
+export const findUser = async (query: string) => {
+  const res = await axios.get(CHAT_BASE_URL + '/contacts/find-user?q=' + encodeURIComponent(query));
+  return res;
+}
+
+export const addContact = async (payload: { uids: string[] }) => {
+  const res = await axios.post(CHAT_BASE_URL + '/contacts', payload);
   return res;
 }
 

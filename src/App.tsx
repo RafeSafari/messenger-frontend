@@ -3,7 +3,7 @@ import './App.css';
 
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import Chat from "./pages/Chat";
+import Chat from "./pages/Messenger";
 import Logout from "./pages/Logout";
 import theme from './theme';
 import { CssBaseline, ThemeProvider } from "@mui/material";

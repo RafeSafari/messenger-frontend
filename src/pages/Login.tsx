@@ -1,4 +1,4 @@
-import { Button, TextField, Stack, Alert } from "@mui/material";
+import { Button, TextField, Stack, Alert, Typography } from "@mui/material";
 import AuthLayout from "../layouts/AuthLayout";
 import { useAuthStore } from "../store/authStore";
 import { Link, useNavigate } from "react-router-dom";
@@ -25,7 +25,7 @@ export default function Login() {
 
     try {
       const loginRes = await loginApi({ email, password });
-      if (!loginRes.data?.token) {
+      if (loginRes.status !== 200) {
         setError("Unable to login.");
         return;
       }
@@ -66,8 +66,8 @@ export default function Login() {
           {loading ? "Logging in..." : "Login"}
         </Button>
         <Stack direction={"row"} justifyContent="center" alignItems="center" gap={1}>
-          Don't have an account?
-          <Link to="/register">Register here</Link>
+          <Typography variant="caption">Don't have an account?</Typography>
+          <Typography variant="caption" component={Link} to="/register">Register here</Typography>
         </Stack>
       </Stack>
     </AuthLayout>
