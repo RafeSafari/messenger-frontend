@@ -14,7 +14,7 @@ function App() {
       <BrowserRouter>
         <Routes />
       </BrowserRouter>
-      <ToastContainer />
+      <ToastContainer autoClose={1500} />
     </ThemeProvider>
   );
 }

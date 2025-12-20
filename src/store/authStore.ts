@@ -1,15 +1,37 @@
 import { create } from "zustand";
+import { persist } from 'zustand/middleware';
 
-type User = { email: string } | null;
+type User = {
+  uid: string;
+  name: string;
+  email: string;
+  avatar?: string;
+  role?: string;
+  status?: string;
+  createdAt: number;
+} | null;
 
 type AuthState = {
   user: User;
-  login: (email: string) => void;
+  login: (user: User) => void;
   logout: () => void;
 };
 
-export const useAuthStore = create<AuthState>((set) => ({
-  user: null,
-  login: (email) => set({ user: { email } }),
-  logout: () => set({ user: null }),
-}));
+export const useAuthStore = create<AuthState>()(
+  persist(
+    (set) => ({
+      user: null,
+      login: (user) => {
+        set({ user });
+        console.log('login@store', user);
+      },
+      logout: () => {
+        set({ user: null });
+        console.log('logout@store');
+      },
+    }),
+    {
+      name: 'auth-storage', // localStorage key
+    }
+  )
+);

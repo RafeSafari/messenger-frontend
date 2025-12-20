@@ -30,11 +30,13 @@ chatApi.interceptors.response.use(
 );
 
 // APIs
-export const register = async (payload: { name: string; email: string; password: string }) =>
+export const postRegister = async (payload: { name: string; email: string; password: string }) =>
   chatApi.post('/auth/register', payload, { skipAuthRedirect: true });
 
-export const login = async (payload: { email: string; password: string }) =>
+export const postLogin = async (payload: { email: string; password: string }) =>
   chatApi.post("/auth/login", payload, { skipAuthRedirect: true });
+
+export const getLogout = async () => chatApi.get('/auth/logout');
 
 export const getContacts = async () => chatApi.get('/contacts');
 

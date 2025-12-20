@@ -7,6 +7,7 @@ import Chat from "./pages/Messenger";
 import Logout from "./pages/Logout";
 import { useEffect } from "react";
 import { setUnauthorizedHandler } from "./library/chatApi";
+import AuthRequiredRoute from "./components/AuthRequiredRoute";
 
 export default function Routes() {
   const navigate = useNavigate();
@@ -20,10 +21,11 @@ export default function Routes() {
   return (
     <ReactRoutes>
       <Route path="/" element={<Navigate to="/login" />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/logout" element={<Logout />} />
       <Route path="/register" element={<Register />} />
-      <Route path="/chat" element={<Chat />} />
+      <Route path="/login" element={<Login />} />
+
+      <Route path="/logout" element={<AuthRequiredRoute><Logout /></AuthRequiredRoute>} />
+      <Route path="/chat" element={<AuthRequiredRoute><Chat /></AuthRequiredRoute>} />
     </ReactRoutes>
   );
 }

@@ -1,19 +1,23 @@
 import { Button, TextField, Stack, Alert, Typography } from "@mui/material";
 import AuthLayout from "../layouts/AuthLayout";
-import { useAuthStore } from "../store/authStore";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
-import { register } from "../library/chatApi";
+import { postRegister } from "../library/chatApi";
+import { toast } from "react-toastify";
+import { useAuthStore } from "../store/authStore";
 
 export default function Register() {
-  const navigate = useNavigate();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+
+  const { login, user } = useAuthStore();
+  const navigate = useNavigate();
+  if (user) return <Navigate to="/chat" />;
 
   const handleRegister = async () => {
     if (!name) return setError("Name is required.");
@@ -25,12 +29,14 @@ export default function Register() {
     setError(null);
 
     try {
-      const registerRes = await register({ name, email, password });
+      const registerRes = await postRegister({ name, email, password });
       if (!registerRes.data?.user?.uid) {
         setError("Unable to register.");
         return;
       }
-      navigate("/login");
+      login(registerRes.data?.user);
+      toast.success("Successfully registered. Welcome to Chat App!");
+      navigate("/chat");
     } catch (err) {
       let message = "Unable to register.";
       if (axios.isAxiosError(err)) {

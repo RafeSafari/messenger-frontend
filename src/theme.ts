@@ -75,10 +75,6 @@ const theme = createTheme({
           textDecoration: 'none',
           color: 'inherit',
 
-          '&:visited': {
-            color: 'inherit',
-          },
-
           '&:hover': {
             textDecoration: 'underline',
           },

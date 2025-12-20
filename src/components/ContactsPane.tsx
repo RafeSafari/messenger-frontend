@@ -1,12 +1,17 @@
-import { FormControl, Stack, TextField } from "@mui/material";
+import { FormControl, IconButton, Stack, TextField, Typography } from "@mui/material";
 import ContactList from "./ContactList";
 import { useEffect, useMemo, useState } from "react";
 import { findUser, getContacts } from "../library/chatApi";
 import SearchResult from "./SearchResult";
 import { useContactsStore } from "../store/contactsStore";
+import { useAuthStore } from "../store/authStore";
+import { Link } from "react-router-dom";
+import LogoutIcon from '@mui/icons-material/Logout';
+import OnlineDot from "./OnlineDot";
 
 export default () => {
   const { contacts, setContacts } = useContactsStore();
+  const { user } = useAuthStore();
 
   useEffect(() => {
     getContacts().then((res) => {
@@ -51,25 +56,61 @@ export default () => {
   }, [debouncedQuery]);
 
   return (
-    <Stack height={1} direction="column" gap={1}>
-      <Stack direction="column" bgcolor="#F3F6F6" p={1}>
-        <FormControl>
-          <TextField
-            label="Search"
-            type="search"
-            value={searchValue}
-            onChange={(event) => setSearchValue(event.target.value)}
-            onFocus={() => setSearchInputHasFocus(true)}
-            onBlur={() => setSearchInputHasFocus(false)}
-          />
-        </FormControl>
+    <Stack height={1} direction="column">
+      <Stack direction="column" gap={1} flex={1}>
+        <Stack
+          p={1}
+          borderBottom="1px solid"
+          borderColor="primary.lighter"
+          bgcolor="primary.lightest"
+        >
+          <FormControl>
+            <TextField
+              label="Search"
+              type="search"
+              size="small"
+              value={searchValue}
+              onChange={(event) => setSearchValue(event.target.value)}
+              onFocus={() => setSearchInputHasFocus(true)}
+              onBlur={() => setSearchInputHasFocus(false)}
+            />
+          </FormControl>
+        </Stack>
+
+        {isSearchMode ? (
+          <>
+            <SearchResult
+              users={searchResult}
+              isSearching={isSearching}
+              query={debouncedQuery}
+            />
+          </>
+        ) : (
+          <ContactList contacts={contacts} />
+        )}
       </Stack>
 
-      {isSearchMode ? <>
-        <SearchResult users={searchResult} isSearching={isSearching} query={debouncedQuery} />
-      </> : (
-        <ContactList contacts={contacts} />
-      )}
+      <Stack
+        direction="row"
+        gap={1}
+        p={1}
+        flex={0}
+        alignItems="center"
+        justifyContent="space-between"
+        borderTop="1px solid"
+        borderColor="primary.lighter"
+        bgcolor="primary.lightest"
+      >
+        <Stack direction="row" gap={1} alignItems="center">
+          <OnlineDot />
+          <Typography variant="body2" color="text.secondary">
+            {user?.name}
+          </Typography>
+        </Stack>
+        <IconButton size="small" color="error" component={Link} to="/logout">
+          <LogoutIcon fontSize="small" />
+        </IconButton>
+      </Stack>
     </Stack>
   );
 };

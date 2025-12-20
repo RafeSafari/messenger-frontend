@@ -2,14 +2,23 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../store/authStore";
+import { getLogout } from "../library/chatApi";
+import { toast } from "react-toastify";
 
 export default function Logout() {
-  const logout = useAuthStore((s) => s.logout);
+  const { logout } = useAuthStore();
   const navigate = useNavigate();
 
   useEffect(() => {
-    logout();
-    navigate("/login", { replace: true });
+    getLogout()
+      .then(() => {
+        logout();
+        navigate("/login", { replace: true });
+      })
+      .catch((err) => {
+        console.error(err);
+        toast.error("Unable to logout!");
+      });
   }, []);
 
   return null;
