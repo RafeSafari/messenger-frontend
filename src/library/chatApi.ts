@@ -1,45 +1,49 @@
-import axios from 'axios';
-axios.defaults.withCredentials = true;
 
-const CHAT_BASE_URL: string = process.env.NODE_ENV === 'production' ? 'https://fake-cometchat-domain.ir' : 'http://localhost:50005';
+import axios, { AxiosError } from 'axios';
 
-// // GET /users
-// async listUsers(options: ListUsersOptions = {}): Promise<ApiResponse<CometChatUser[]>> {
-//   const res = await this.http.get<ApiResponse<CometChatUser[]>>('/users', {
-//     params: options,
-//   });
-//   return res.data;
-// }
+type AuthErrorHandler = () => void;
+let onUnauthorized: AuthErrorHandler | null = null;
 
-export const register = async (payload: { name: string; email: string; password: string }) => {
-  const res = await axios.post(CHAT_BASE_URL + '/auth/register', payload);
-  return res;
-}
+export const setUnauthorizedHandler = (handler: AuthErrorHandler) => {
+  onUnauthorized = handler;
+};
 
-export const login = async (payload: { email: string; password: string }) => {
-  const res = await axios.post(CHAT_BASE_URL + '/auth/login', payload);
-  return res;
-}
+export const chatApi = axios.create({
+  baseURL:
+    process.env.NODE_ENV === 'production'
+      ? 'https://api.fake-cometchat-domain.ir'
+      : 'http://localhost:50005',
+  withCredentials: true
+});
 
-export const getContacts = async () => {
-  const res = await axios.get(CHAT_BASE_URL + '/contacts');
-  return res;
-}
+chatApi.interceptors.response.use(
+  (response) => response,
+  (error: AxiosError) => {
+    if (
+      error.response?.status === 401 &&
+      !error.config?.skipAuthRedirect
+    ) {
+      onUnauthorized?.();
+    }
+    return Promise.reject(error);
+  }
+);
 
-export const findUser = async (query: string) => {
-  const res = await axios.get(CHAT_BASE_URL + '/contacts/find-user?q=' + encodeURIComponent(query));
-  return res;
-}
+// APIs
+export const register = async (payload: { name: string; email: string; password: string }) =>
+  chatApi.post('/auth/register', payload, { skipAuthRedirect: true });
 
-export const addContact = async (payload: { uids: string[] }) => {
-  const res = await axios.post(CHAT_BASE_URL + '/contacts', payload);
-  return res;
-}
+export const login = async (payload: { email: string; password: string }) =>
+  chatApi.post("/auth/login", payload, { skipAuthRedirect: true });
 
-export const getUser = async (uid: string) => {
-  const res = await axios.get(CHAT_BASE_URL + '/contacts/' + encodeURIComponent(uid));
-  return res;
-}
+export const getContacts = async () => chatApi.get('/contacts');
+
+export const findUser = async (query: string) => chatApi.get("/contacts/find-user?q=" + encodeURIComponent(query));
+
+export const addContact = async (payload: { uids: string[] }) => chatApi.post("/contacts", payload);
+
+export const getUser = async (uid: string) =>
+  chatApi.get("/contacts/" + encodeURIComponent(uid));
 
 // // PUT /users/{uid}
 // async updateUser(
