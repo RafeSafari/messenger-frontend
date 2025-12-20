@@ -8,6 +8,7 @@ import { useAuthStore } from "../store/authStore";
 import { Link } from "react-router-dom";
 import LogoutIcon from '@mui/icons-material/Logout';
 import OnlineDot from "./OnlineDot";
+import { useSearchStore } from "../store/searchStore";
 
 export default () => {
   const { contacts, setContacts } = useContactsStore();
@@ -19,20 +20,21 @@ export default () => {
     });
   }, []);
 
-  const [searchValue, setSearchValue] = useState('');
+  const { query, setQuery } = useSearchStore();
+
   const [debouncedQuery, setDebouncedQuery] = useState('');
   useEffect(() => {
     const id = setTimeout(() => {
-      setDebouncedQuery(searchValue);
+      setDebouncedQuery(query);
     }, 300);
     return () => clearTimeout(id);
-  }, [searchValue]);
+  }, [query]);
 
   const [searchResult, setSearchResult] = useState<Contact[] | undefined>();
   const [searchInputHasFocus, setSearchInputHasFocus] = useState(false);
   const isSearchMode = useMemo(() => {
-    return searchInputHasFocus || searchValue;
-  }, [searchInputHasFocus, searchValue]);
+    return searchInputHasFocus || query;
+  }, [searchInputHasFocus, query]);
 
   const [isSearching, setIsSearching] = useState(false);
   useEffect(() => {
@@ -71,8 +73,8 @@ export default () => {
               label="Search"
               type="search"
               size="small"
-              value={searchValue}
-              onChange={(event) => setSearchValue(event.target.value)}
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
               onFocus={() => setSearchInputHasFocus(true)}
               onBlur={() => setSearchInputHasFocus(false)}
             />

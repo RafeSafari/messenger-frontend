@@ -12,6 +12,31 @@ const ChatBoxWrapper = () => {
   const { contact, addMessage } = useChatStore();
   const { user } = useAuthStore();
 
+  const conversationWrapperRef = useRef<HTMLDivElement>(null);
+
+  useEffect(scrollBottom, []);
+
+  function scrollBottom() {
+    if (conversationWrapperRef.current) {
+      conversationWrapperRef.current.scrollTop = conversationWrapperRef.current.scrollHeight;
+    }
+  }
+
+  useEffect(() => {
+    socket.emit("register", user?.uid);
+
+    socket.on("text-message", (message: ServerMessage) => {
+      if (message.sender === contact?.uid) {
+        addMessage(message);
+        scrollBottom();
+      }
+    });
+
+    return () => {
+      socket.off("text-message");
+    };
+  }, [user?.uid, contact?.uid]);
+
   if (!contact) {
     return (
       <Stack height={1} alignItems="center" justifyContent="center">
@@ -43,30 +68,6 @@ const ChatBoxWrapper = () => {
       })
       .catch((err) => console.error(err));
   };
-
-  const conversationWrapperRef = useRef<HTMLDivElement>(null);
-  useEffect(scrollBottom, []);
-
-  function scrollBottom() {
-    if (conversationWrapperRef.current) {
-      conversationWrapperRef.current.scrollTop = conversationWrapperRef.current.scrollHeight;
-    }
-  }
-
-  useEffect(() => {
-    socket.emit("register", user?.uid);
-
-    socket.on("text-message", (message: ServerMessage) => {
-      if (message.sender === contact.uid) {
-        addMessage(message);
-        scrollBottom();
-      }
-    });
-
-    return () => {
-      socket.off("text-message");
-    };
-  }, [user?.uid]);
 
   return (
     <Stack height={1} direction="column">
@@ -101,5 +102,6 @@ const ChatBoxWrapper = () => {
     </Stack>
   );
 };
+
 
 export default ChatBoxWrapper;

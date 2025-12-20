@@ -5,10 +5,22 @@ import { toast } from "react-toastify";
 import { useContactsStore } from "../../store/contactsStore";
 import { useEffect } from "react";
 import MessageItem from "./MessageItem";
+import { useSearchStore } from "../../store/searchStore";
 
 const ChatBox = () => {
   const { contact, setContact, messages, setMessages } = useChatStore();
   const { addSingleContact } = useContactsStore();
+  const { reset: clearSearch } = useSearchStore();
+
+  useEffect(() => {
+    if (contact?.uid) {
+      getChat(contact?.uid)
+        .then((res) => {
+          setMessages(res.data?.res || []);
+        })
+        .catch((err) => console.error(err));
+    }
+  }, [contact?.uid]);
 
   if (!contact) return null;
 
@@ -17,9 +29,9 @@ const ChatBox = () => {
       if (res.data?.res?.[contact.uid]?.success) {
         getUser(contact.uid).then(res => {
           if (res.data) {
-            addSingleContact(res.data?.user);
-            // TODO: fix it
-            setContact(res.data?.user); // ! wrong
+            addSingleContact(res.data?.user?.data);
+            setContact(res.data?.user?.data);
+            clearSearch();
           }
         });
       }
@@ -39,14 +51,6 @@ const ChatBox = () => {
       </Stack>
     </Stack>
   )
-
-  useEffect(() => {
-    getChat(contact.uid)
-      .then((res) => {
-        setMessages(res.data?.res || []);
-      })
-      .catch((err) => console.error(err));
-  }, []);
 
   return (
     <Stack height={1} p={1} direction="column" gap={1}>

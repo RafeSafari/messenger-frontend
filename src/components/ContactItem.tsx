@@ -2,7 +2,7 @@ import { Avatar, Button, Skeleton, Stack, Typography } from "@mui/material";
 import { useChatStore } from "../store/chatStore";
 import stringToSoftColor from "../utils/stringToSoftColor";
 
-export default ({ contact }: { contact: Contact }) => {
+export default ({ contact, active }: { contact: Contact, active?: boolean }) => {
   const chatStore = useChatStore();
 
   return (
@@ -20,6 +20,7 @@ export default ({ contact }: { contact: Contact }) => {
         width: "100%",
         justifyContent: "start",
         textAlign: "start",
+        bgcolor: active ? "primary.lightest" : "transparent",
       }}
     >
       <Avatar src={contact.avatar} sx={{ bgcolor: stringToSoftColor(contact.uid) }}>{contact.name?.[0]?.toUpperCase()}</Avatar>
