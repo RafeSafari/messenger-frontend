@@ -43,16 +43,15 @@ const ChatBox = () => {
   useEffect(() => {
     getChat(contact.uid)
       .then((res) => {
-        console.log(res);
         setMessages(res.data?.res || []);
       })
       .catch((err) => console.error(err));
   }, []);
 
   return (
-    <Stack height={1} direction="column" gap={1} p={1}>
+    <Stack height={1} p={1} direction="column" gap={1}>
       {messages.map((message) => (
-        <MessageItem message={message} />
+        <MessageItem message={message} key={message.id} />
       ))}
     </Stack>
   );

@@ -4,9 +4,13 @@ import ConversationBox from "./ChatBox";
 import ChatHeader from "./ChatHeader";
 import ChatInput from "./ChatInput";
 import { postMessage } from "../../library/chatApi";
+import { socket } from "../../socket";
+import { useEffect, useRef } from "react";
+import { useAuthStore } from "../../store/authStore";
 
 const ChatBoxWrapper = () => {
   const { contact, addMessage } = useChatStore();
+  const { user } = useAuthStore();
 
   if (!contact) {
     return (
@@ -32,11 +36,37 @@ const ChatBoxWrapper = () => {
 
   const sendMessage = (message: string) => {
     if (!contact.uid || !message) return;
-    console.log('send', message, 'to', contact.uid);
     postMessage(contact.uid, message)
-      .then((res) => addMessage(res.data.res))
+      .then((res) => {
+        addMessage(res.data.res);
+        scrollBottom();
+      })
       .catch((err) => console.error(err));
   };
+
+  const conversationWrapperRef = useRef<HTMLDivElement>(null);
+  useEffect(scrollBottom, []);
+
+  function scrollBottom() {
+    if (conversationWrapperRef.current) {
+      conversationWrapperRef.current.scrollTop = conversationWrapperRef.current.scrollHeight;
+    }
+  }
+
+  useEffect(() => {
+    socket.emit("register", user?.uid);
+
+    socket.on("text-message", (message: ServerMessage) => {
+      if (message.sender === contact.uid) {
+        addMessage(message);
+        scrollBottom();
+      }
+    });
+
+    return () => {
+      socket.off("text-message");
+    };
+  }, [user?.uid]);
 
   return (
     <Stack height={1} direction="column">
@@ -52,7 +82,7 @@ const ChatBoxWrapper = () => {
       </Stack>
 
       {/* Chat */}
-      <Stack flex={1}>
+      <Stack flex={1} p={1} mb={1} sx={{ overflowY: "auto" }} ref={conversationWrapperRef}>
         <ConversationBox />
       </Stack>
 
