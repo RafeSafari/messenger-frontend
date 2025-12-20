@@ -47,6 +47,12 @@ export const addContact = async (payload: { uids: string[] }) => chatApi.post("/
 export const getUser = async (uid: string) =>
   chatApi.get("/contacts/" + encodeURIComponent(uid));
 
+export const postMessage = async (receiverId: string, message: string) =>
+  chatApi.post(`/chat/user/${receiverId}`, { message });
+
+export const getChat = async (contactId: string) =>
+  chatApi.get(`/chat/user/${contactId}`);
+
 // // PUT /users/{uid}
 // async updateUser(
 //   uid: string,

@@ -1,48 +1,61 @@
-import { Stack, Typography } from "@mui/material";
+import { Button, Stack, Typography } from "@mui/material";
 import { useChatStore } from "../../store/chatStore";
-import ConversationBox from "./ConversationBox";
-import ChatHeader from "./ChatHeader";
+import { addContact, getChat, getUser } from "../../library/chatApi";
+import { toast } from "react-toastify";
+import { useContactsStore } from "../../store/contactsStore";
+import { useEffect } from "react";
+import MessageItem from "./MessageItem";
 
-export default () => {
-  const { contact } = useChatStore();
+const ChatBox = () => {
+  const { contact, setContact, messages, setMessages } = useChatStore();
+  const { addSingleContact } = useContactsStore();
 
-  if (!contact) {
-    return (
-      <Stack height={1} alignItems="center" justifyContent="center">
-        <Stack
-          gap={1}
-          direction="column"
-          bgcolor="primary.lighter"
-          alignItems="center"
-          borderRadius={2}
-          p={2}
-        >
-          <Typography variant="body1" color="primary.dark">
-            Select a contact to start messaging
-          </Typography>
-          <Typography variant="caption" color="primary.dark">
-            or search for a friend
-          </Typography>
-        </Stack>
-      </Stack>
-    );
+  if (!contact) return null;
+
+  const addToContacts = () => {
+    addContact({ uids: [contact.uid] }).then(res => {
+      if (res.data?.res?.[contact.uid]?.success) {
+        getUser(contact.uid).then(res => {
+          if (res.data) {
+            addSingleContact(res.data?.user);
+            // TODO: fix it
+            setContact(res.data?.user); // ! wrong
+          }
+        });
+      }
+
+    }).catch(err => {
+      console.error(err);
+      toast.error('Failed to add this contact');
+    });
   }
 
+  if (!contact.conversationId) return (
+    <Stack height={1} alignItems="center" justifyContent="center">
+      <Stack gap={1.5} direction="column" bgcolor="primary.lighter" alignItems="center" borderRadius={2} px={4} py={2}>
+        <Typography variant="body2" color="primary.dark">This user is not in your contact list</Typography>
+        <Button variant="contained" color="primary" onClick={addToContacts}>Add "{contact.name}" to contacts</Button>
+        <Typography variant="body2" color="primary.dark">to start a conversation</Typography>
+      </Stack>
+    </Stack>
+  )
+
+  useEffect(() => {
+    getChat(contact.uid)
+      .then((res) => {
+        console.log(res);
+        setMessages(res.data?.res || []);
+      })
+      .catch((err) => console.error(err));
+  }, []);
+
   return (
-    <Stack height={1} direction="column">
-      <Stack flex={0} bgcolor="primary.lighter">
-        <ChatHeader />
-      </Stack>
-
-      {/* Chat */}
-      <Stack flex={1}>
-        <ConversationBox />
-      </Stack>
-
-      {/* Footer input */}
-      <Stack flex={0} bgcolor="primary.lighter">
-        input
-      </Stack>
+    <Stack height={1} direction="column" gap={1} p={1}>
+      {messages.map((message) => (
+        <MessageItem message={message} />
+      ))}
     </Stack>
   );
 };
+
+export default ChatBox;

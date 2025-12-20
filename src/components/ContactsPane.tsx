@@ -63,6 +63,8 @@ export default () => {
           borderBottom="1px solid"
           borderColor="primary.lighter"
           bgcolor="primary.lightest"
+          minHeight={58}
+          justifyContent="center"
         >
           <FormControl>
             <TextField
@@ -100,6 +102,7 @@ export default () => {
         borderTop="1px solid"
         borderColor="primary.lighter"
         bgcolor="primary.lightest"
+        minHeight={57}
       >
         <Stack direction="row" gap={1} alignItems="center">
           <OnlineDot />

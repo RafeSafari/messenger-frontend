@@ -14,4 +14,32 @@ declare global {
     conversationId?: string;
     [key: string]: unknown;
   };
+  
+  type Message = {
+    id: string;
+    conversationId: string;
+    sender: string;
+    receiver: string;
+    text: string;
+    sentAt: number;
+    type: string;
+    category: string;
+  };
+  
+  type ServerMessage = {
+    category: string;
+    conversationId: string;
+    data: {
+      text?: string;
+      [key: string]: unknown;
+    };
+    id: string;
+    receiver: string;
+    receiverType: string;
+    sender: string;
+    sentAt: number;
+    type: string;
+    updatedAt: number;
+  };
+
 }
