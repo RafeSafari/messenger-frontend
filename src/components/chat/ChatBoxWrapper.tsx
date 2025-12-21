@@ -66,7 +66,7 @@ const ChatBoxWrapper = () => {
     postMessage(contact.uid, message)
       .then((res) => {
         addMessage(res.data.res);
-        scrollBottom();
+        scrollBottom(10);
       })
       .catch((err) => console.error(err));
   };
