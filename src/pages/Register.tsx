@@ -62,6 +62,7 @@ export default function Register() {
           onChange={(event) => setName(event.target.value)}
           autoComplete="name"
           required
+          onKeyDown={(event) => event.key === "Enter" && handleRegister()}
         />
         <TextField
           label="Your email"
@@ -69,6 +70,7 @@ export default function Register() {
           onChange={(event) => setEmail(event.target.value)}
           autoComplete="email"
           required
+          onKeyDown={(event) => event.key === "Enter" && handleRegister()}
         />
         <TextField
           label="Password"
@@ -77,6 +79,7 @@ export default function Register() {
           onChange={(event) => setPassword(event.target.value)}
           autoComplete="new-password"
           required
+          onKeyDown={(event) => event.key === "Enter" && handleRegister()}
         />
         <TextField
           label="Confirm Password"
@@ -85,6 +88,7 @@ export default function Register() {
           onChange={(event) => setPasswordConfirm(event.target.value)}
           autoComplete="new-password"
           required
+          onKeyDown={(event) => event.key === "Enter" && handleRegister()}
         />
         {error && <Alert severity="error">{error}</Alert>}
         <Button

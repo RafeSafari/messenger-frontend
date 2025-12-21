@@ -58,6 +58,8 @@ export default function Login() {
           value={email}
           onChange={(event) => setEmail(event.target.value)}
           autoComplete="email"
+          required
+          onKeyDown={(event) => event.key === "Enter" && handleLogin()}
         />
         <TextField
           label="Password"
@@ -65,6 +67,8 @@ export default function Login() {
           value={password}
           onChange={(event) => setPassword(event.target.value)}
           autoComplete="current-password"
+          required
+          onKeyDown={(event) => event.key === "Enter" && handleLogin()}
         />
         {error && <Alert severity="error">{error}</Alert>}
         <Button variant="contained" disabled={loading} onClick={handleLogin}>
