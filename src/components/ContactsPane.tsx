@@ -9,15 +9,30 @@ import { Link } from "react-router-dom";
 import LogoutIcon from '@mui/icons-material/Logout';
 import OnlineDot from "./OnlineDot";
 import { useSearchStore } from "../store/searchStore";
+import { socket } from "../socket";
 
 export default () => {
   const { contacts, setContacts } = useContactsStore();
   const { user } = useAuthStore();
 
-  useEffect(() => {
+  const reloadContacts = () => {
     getContacts().then((res) => {
       setContacts(res.data?.contacts || []);
     });
+  };
+
+  useEffect(reloadContacts, []);
+
+  useEffect(() => {
+    socket.emit("register", user?.uid);
+
+    socket.on("new-contact", (uid: string) => {
+      reloadContacts();
+    });
+
+    return () => {
+      socket.off("new-contact");
+    };
   }, []);
 
   const { query, setQuery } = useSearchStore();

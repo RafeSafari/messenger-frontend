@@ -16,19 +16,21 @@ const ChatBoxWrapper = () => {
 
   useEffect(scrollBottom, []);
 
-  function scrollBottom() {
-    if (conversationWrapperRef.current) {
-      conversationWrapperRef.current.scrollTop = conversationWrapperRef.current.scrollHeight;
-    }
+  function scrollBottom(delay = 0) {
+    setTimeout(() => {
+      if (conversationWrapperRef.current) {
+        conversationWrapperRef.current.scrollTop = conversationWrapperRef.current.scrollHeight;
+      }
+    }, delay);
   }
 
   useEffect(() => {
-    socket.emit("register", user?.uid);
+    // socket.emit("register", user?.uid);
 
     socket.on("text-message", (message: ServerMessage) => {
       if (message.sender === contact?.uid) {
         addMessage(message);
-        scrollBottom();
+        scrollBottom(10);
       }
     });
 

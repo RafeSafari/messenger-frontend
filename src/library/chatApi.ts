@@ -42,7 +42,7 @@ export const getContacts = async () => chatApi.get('/contacts');
 
 export const findUser = async (query: string) => chatApi.get("/contacts/find-user?q=" + encodeURIComponent(query));
 
-export const addContact = async (payload: { uids: string[] }) => chatApi.post("/contacts", payload);
+export const addContact = async (payload: { uid: string }) => chatApi.post("/contacts", payload);
 
 export const getUser = async (uid: string) =>
   chatApi.get("/contacts/" + encodeURIComponent(uid));

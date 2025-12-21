@@ -2,7 +2,7 @@ import { Stack } from "@mui/material";
 import ContactItem, { ContactItemSkeleton } from "./ContactItem";
 import { useChatStore } from "../store/chatStore";
 
-export default ({ contacts }: { contacts?: Contact[] }) => {
+const ContactList = ({ contacts }: { contacts?: Contact[] }) => {
   const { contact: selectedContact } = useChatStore();
 
   return (
@@ -22,3 +22,5 @@ export default ({ contacts }: { contacts?: Contact[] }) => {
     </Stack>
   );
 };
+
+export default ContactList;
