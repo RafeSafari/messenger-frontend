@@ -32,7 +32,6 @@ export default function Login() {
         setError("Unable to login.");
         return;
       }
-      console.log('loginRes', loginRes.data?.user)
       login(loginRes.data?.user);
       toast.success("Welcome back to Chat App!");
       navigate("/chat");

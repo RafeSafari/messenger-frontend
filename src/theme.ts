@@ -50,7 +50,6 @@ const theme = createTheme({
       },
     },
 
-    // ✅ MUI Link customization
     MuiLink: {
       defaultProps: {
         underline: 'none',
@@ -68,7 +67,6 @@ const theme = createTheme({
       },
     },
 
-    // ✅ Native <a> tags (important!)
     MuiCssBaseline: {
       styleOverrides: {
         a: {
