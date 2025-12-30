@@ -20,12 +20,12 @@ const ChatBox = () => {
         })
         .catch((err) => console.error(err));
     }
-  }, [contact?.uid]);
+  }, [contact?.uid, setMessages]);
 
   if (!contact) return null;
 
   const addToContacts = () => {
-    addContact({ uids: [contact.uid] }).then(res => {
+    addContact({ uid: contact.uid }).then(res => {
       if (res.data?.res?.[contact.uid]?.success) {
         getUser(contact.uid).then(res => {
           if (res.data) {
