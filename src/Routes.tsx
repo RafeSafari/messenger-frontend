@@ -8,12 +8,15 @@ import Logout from "./pages/Logout";
 import { useEffect } from "react";
 import { setUnauthorizedHandler } from "./library/chatApi";
 import AuthRequiredRoute from "./components/AuthRequiredRoute";
+import { useAuthStore } from "./store/authStore";
 
 export default function Routes() {
   const navigate = useNavigate();
+  const { logout } = useAuthStore();
 
   useEffect(() => {
     setUnauthorizedHandler(() => {
+      logout();
       navigate('/login', { replace: true });
     });
   }, [navigate]);
