@@ -31,25 +31,25 @@ chatApi.interceptors.response.use(
 );
 
 export const postRegister = async (payload: { name: string; email: string; password: string }) =>
-  chatApi.post('/auth/register', payload, { skipAuthRedirect: true });
+  chatApi.post('/api/auth/register', payload, { skipAuthRedirect: true });
 
 export const postLogin = async (payload: { email: string; password: string }) =>
-  chatApi.post("/auth/login", payload, { skipAuthRedirect: true });
+  chatApi.post("/api/auth/login", payload, { skipAuthRedirect: true });
 
-export const getLogout = async () => chatApi.get('/auth/logout');
+export const getLogout = async () => chatApi.get('/api/auth/logout');
 
-export const getContacts = async () => chatApi.get('/contacts');
+export const getContacts = async () => chatApi.get('/api/contacts');
 
-export const findUser = async (query: string) => chatApi.get("/contacts/find-user?q=" + encodeURIComponent(query));
+export const findUser = async (query: string) => chatApi.get("/api/contacts/find-user?q=" + encodeURIComponent(query));
 
-export const addContact = async (payload: { uid: string }) => chatApi.post("/contacts", payload);
+export const addContact = async (payload: { uid: string }) => chatApi.post("/api/contacts", payload);
 
 export const getUser = async (uid: string) =>
-  chatApi.get("/contacts/" + encodeURIComponent(uid));
+  chatApi.get("/api/contacts/" + encodeURIComponent(uid));
 
 export const postMessage = async (receiverId: string, message: string) =>
-  chatApi.post(`/chat/user/${receiverId}`, { message });
+  chatApi.post(`/api/chat/user/${receiverId}`, { message });
 
 export const getChat = async (contactId: string) =>
-  chatApi.get(`/chat/user/${contactId}`);
+  chatApi.get(`/api/chat/user/${contactId}`);
 
