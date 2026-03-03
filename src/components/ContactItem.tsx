@@ -2,7 +2,7 @@ import { Avatar, Button, Skeleton, Stack, Typography } from "@mui/material";
 import { useChatStore } from "../store/chatStore";
 import stringToSoftColor from "../utils/stringToSoftColor";
 
-export default ({ contact, active }: { contact: Contact, active?: boolean }) => {
+const ContactItem = ({ contact, active }: { contact: Contact, active?: boolean }) => {
   const chatStore = useChatStore();
 
   return (
@@ -41,3 +41,5 @@ export const ContactItemSkeleton = () => (
     </Stack>
   </Stack>
 );
+
+export default ContactItem;

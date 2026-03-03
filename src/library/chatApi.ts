@@ -23,6 +23,7 @@ chatApi.interceptors.response.use(
       error.response?.status === 401 &&
       !error.config?.skipAuthRedirect
     ) {
+      console.log('onUnauthorized', onUnauthorized)
       onUnauthorized?.();
     }
     return Promise.reject(error);

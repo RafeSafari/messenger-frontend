@@ -3,14 +3,16 @@ import { useChatStore } from "../../store/chatStore";
 import ConversationBox from "./ChatBox";
 import ChatHeader from "./ChatHeader";
 import ChatInput from "./ChatInput";
-import { postMessage } from "../../library/chatApi";
+import { getContacts, postMessage } from "../../library/chatApi";
 import { socket } from "../../socket";
 import { useEffect, useRef } from "react";
 import { useAuthStore } from "../../store/authStore";
+import { useContactsStore } from "../../store/contactsStore";
 
 const ChatBoxWrapper = () => {
   const { contact, addMessage } = useChatStore();
   const { user } = useAuthStore();
+  const { setContacts } = useContactsStore();
 
   const conversationWrapperRef = useRef<HTMLDivElement>(null);
 
@@ -18,7 +20,8 @@ const ChatBoxWrapper = () => {
 
   function scrollBottom() {
     if (conversationWrapperRef.current) {
-      conversationWrapperRef.current.scrollTop = conversationWrapperRef.current.scrollHeight;
+      conversationWrapperRef.current.scrollTop =
+        conversationWrapperRef.current.scrollHeight;
     }
   }
 
@@ -32,10 +35,17 @@ const ChatBoxWrapper = () => {
       }
     });
 
+    socket.on("new-contact", (contactId: string) => {
+      console.log('this user added you as their friends:', contactId)
+      getContacts().then((res) => {
+        setContacts(res.data?.contacts || []);
+      });
+    });
+
     return () => {
       socket.off("text-message");
     };
-  }, [user?.uid, contact?.uid]);
+  }, [user?.uid, contact?.uid, addMessage]);
 
   if (!contact) {
     return (
@@ -83,7 +93,13 @@ const ChatBoxWrapper = () => {
       </Stack>
 
       {/* Chat */}
-      <Stack flex={1} p={1} mb={1} sx={{ overflowY: "auto" }} ref={conversationWrapperRef}>
+      <Stack
+        flex={1}
+        p={1}
+        mb={1}
+        sx={{ overflowY: "auto" }}
+        ref={conversationWrapperRef}
+      >
         <ConversationBox />
       </Stack>
 
@@ -102,6 +118,5 @@ const ChatBoxWrapper = () => {
     </Stack>
   );
 };
-
 
 export default ChatBoxWrapper;

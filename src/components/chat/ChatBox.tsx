@@ -1,21 +1,22 @@
 import { Button, Stack, Typography } from "@mui/material";
 import { useChatStore } from "../../store/chatStore";
-import { addContact, getChat, getUser } from "../../library/chatApi";
+import { addContact, getChat, getContacts, getUser } from "../../library/chatApi";
 import { toast } from "react-toastify";
 import { useContactsStore } from "../../store/contactsStore";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import MessageItem from "./MessageItem";
 import { useSearchStore } from "../../store/searchStore";
 
 const ChatBox = () => {
-  const { contact, setContact, messages, setMessages } = useChatStore();
-  const { addSingleContact } = useContactsStore();
+  const { contact, setContact, messages, setMessages, closeChat } = useChatStore();
   const { reset: clearSearch } = useSearchStore();
+  const { setContacts } = useContactsStore();
 
   useEffect(() => {
     if (contact?.uid) {
       getChat(contact?.uid)
         .then((res) => {
+          console.log('getChat for:', contact?.uid, '\nres => ', res)
           setMessages(res.data?.res || []);
         })
         .catch((err) => console.error(err));
@@ -29,16 +30,21 @@ const ChatBox = () => {
       if (res.data?.res?.[contact.uid]?.success) {
         getUser(contact.uid).then(res => {
           if (res.data) {
-            addSingleContact(res.data?.user?.data);
-            setContact(res.data?.user?.data);
+            if (res.data?.user) {
+              setContact(res.data?.user);
+            }
+            getContacts().then((res) => {
+              setContacts(res.data?.contacts || []);
+            });
             clearSearch();
           }
         });
       }
 
     }).catch(err => {
+      closeChat();
       console.error(err);
-      toast.error('Failed to add this contact');
+      toast.error(err.response.data?.message || 'Failed to add this contact');
     });
   }
 

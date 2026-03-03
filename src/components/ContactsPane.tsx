@@ -10,7 +10,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import OnlineDot from "./OnlineDot";
 import { useSearchStore } from "../store/searchStore";
 
-export default () => {
+const ContactsPane = () => {
   const { contacts, setContacts } = useContactsStore();
   const { user } = useAuthStore();
 
@@ -18,7 +18,7 @@ export default () => {
     getContacts().then((res) => {
       setContacts(res.data?.contacts || []);
     });
-  }, []);
+  }, [setContacts]);
 
   const { query, setQuery } = useSearchStore();
 
@@ -55,7 +55,7 @@ export default () => {
         )
         .finally(() => setIsSearching(false));
     }
-  }, [debouncedQuery]);
+  }, [debouncedQuery, contacts]);
 
   return (
     <Stack height={1} direction="column">
@@ -119,3 +119,5 @@ export default () => {
     </Stack>
   );
 };
+
+export default ContactsPane;

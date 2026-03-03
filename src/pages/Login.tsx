@@ -2,10 +2,11 @@ import { Button, TextField, Stack, Alert, Typography } from "@mui/material";
 import AuthLayout from "../layouts/AuthLayout";
 import { useAuthStore } from "../store/authStore";
 import { Link, Navigate, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { postLogin as loginApi } from "../library/chatApi";
 import { toast } from "react-toastify";
+import { useChatStore } from "../store/chatStore";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -13,8 +14,13 @@ export default function Login() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const { login, user } = useAuthStore();
   const navigate = useNavigate();
+  const { closeChat } = useChatStore();
+  useEffect(() => {
+    closeChat();
+  }, [closeChat]);
+
+  const { login, user } = useAuthStore();
   if (user) return <Navigate to="/chat" />;
 
   const handleLogin = async () => {

@@ -29,7 +29,8 @@ declare global {
   type ServerMessage = {
     category: string;
     conversationId: string;
-    data: {
+    text?: string;
+    data?: {
       text?: string;
       [key: string]: unknown;
     };

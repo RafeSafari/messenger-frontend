@@ -1,7 +1,7 @@
 import { Stack, Typography } from "@mui/material";
 import ContactItem, { ContactItemSkeleton } from "./ContactItem";
 
-export default ({
+const SearchResult = ({
   users,
   isSearching = false,
   query = '',
@@ -32,3 +32,5 @@ export default ({
     </Stack>
   );
 };
+
+export default SearchResult;

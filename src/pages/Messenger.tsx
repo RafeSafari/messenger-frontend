@@ -2,7 +2,7 @@ import { Box, Stack } from "@mui/material";
 import Contacts from "../components/ContactsPane";
 import ChatBoxWrapper from "../components/chat/ChatBoxWrapper";
 
-export default () => (
+const Messenger = () => (
   <Stack display="flex" direction='row' height="100vh">
     <Box
       width={250}
@@ -18,3 +18,5 @@ export default () => (
     </Box>
   </Stack>
 );
+
+export default Messenger;

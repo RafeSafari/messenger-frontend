@@ -25,7 +25,7 @@ export default function Logout() {
         console.error(err);
         toast.error("Unable to logout!");
       });
-  }, []);
+  }, [logout]);
 
   return null;
 }

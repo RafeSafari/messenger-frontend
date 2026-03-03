@@ -20,7 +20,7 @@ const MessageItem = ({ message }: { message: Message }) => {
     >
       <Typography>{message.text}</Typography>
       <Typography variant="caption" color="text.secondary" sx={{ opacity: .5, textAlign: user?.uid === message.sender ? "end" : "start" }}>
-        {formatTime(message.sentAt * 1000)}
+        {formatTime(message.sentAt)}
       </Typography>
     </Stack>
   );

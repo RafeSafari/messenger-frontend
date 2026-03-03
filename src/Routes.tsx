@@ -19,7 +19,7 @@ export default function Routes() {
       logout();
       navigate('/login', { replace: true });
     });
-  }, [navigate]);
+  }, [logout, navigate]);
 
   return (
     <ReactRoutes>

@@ -13,8 +13,14 @@ export const useContactsStore = create<ContactsState>()(
     (set) => ({
       contacts: [],
       setContacts: (contacts) => set({ contacts }),
-      addSingleContact: (contact) =>
-        set((state) => ({ contacts: [...state.contacts, contact] })),
+      addSingleContact: (contact) => 
+        set((state) => {
+          if (!state.contacts.find(c => c.uid === contact.uid)) {
+            return state;
+          } else {
+            return { contacts: [...state.contacts, contact].filter(c => c) }
+          }
+        }),
       clearContacts: () => set({ contacts: [] }),
     }),
     // TODO: remove localstorage later

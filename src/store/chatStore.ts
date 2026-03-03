@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-const parseServerMessage = (message: ServerMessage): Message => ({ ...message, text: message.data?.text || '' });
+const parseServerMessage = (message: ServerMessage): Message => ({ ...message, text: message?.text || message.data?.text || '' });
 
 type ChatState = {
   contact: Contact | null;

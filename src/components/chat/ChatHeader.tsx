@@ -8,7 +8,7 @@ const STATUS_COLORS: Record<string, string> = {
   idle: '#ff9800'
 };
 
-export default () => {
+const ChatHeader = () => {
   const { contact } = useChatStore();
   if (!contact) return null;
 
@@ -31,3 +31,5 @@ export default () => {
     </Stack>
   );
 };
+
+export default ChatHeader;

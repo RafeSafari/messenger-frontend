@@ -1,6 +1,9 @@
 export default function formatTime(
   timestamp: number | string | Date
 ) {
+  if (typeof timestamp === "number" && !isNaN(timestamp) && timestamp < 12345678901) {
+    timestamp *= 1000;
+  }
   const date = new Date(timestamp);
   const now = new Date();
 
