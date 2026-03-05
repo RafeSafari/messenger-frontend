@@ -11,7 +11,7 @@ export const setUnauthorizedHandler = (handler: AuthErrorHandler) => {
 export const chatApi = axios.create({
   baseURL:
     process.env.NODE_ENV === 'production'
-      ? 'https://api.fake-cometchat-domain.ir'
+      ? '/'
       : 'http://localhost:50005',
   withCredentials: true
 });
